@@ -50,6 +50,9 @@ def readTableRules(sw, table_name = None):
     :param p4info_helper: the P4Info helper
     :param sw: the switch connection
     """
+
+    rule_counter = 0
+
     print '\n----- Reading tables rules -----'
     if table_name is not None:
         t_id = sw.get_table_id(table_name)
@@ -72,6 +75,9 @@ def readTableRules(sw, table_name = None):
                 print sw.p4info_helper.get_action_param_name(action_name, p.param_id),
                 print '%r' % p.value,
             print
+            rule_counter = rule_counter + 1
+    print("======================================================")
+    print("Total number of rules: %d" % rule_counter)
     print
 
 def error(msg, *args, **kwargs):
@@ -153,10 +159,10 @@ def main():
             s1.add_roleconfig_entry(roleconfig, "ingress.table1_control.table1", 1)
             s1.handshake(roleconfig)
 
-        # Set Table1 Flow entry
 
         # IPv4_lpm
-        print("Insert IPv4_lpm Flow Entries")
+        table_name = "ipv4_lpm"
+        print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.ipv4_lpm",
             match_fields={
@@ -168,10 +174,55 @@ def main():
                 "port": 1
             })
         s1.WriteTableEntry(table_entry)
-        print("Installed IPv4_lpm rule")
+        print("%s rule installed" % table_name)
 
 
-        print("Insert IPv4_lpm Flow Entries")
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.1.2", 32)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:00:01:02",
+                "port": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.1.3", 32)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:00:01:03",
+                "port": 3
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.1.4", 32)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:00:01:01",
+                "port": 4
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.ipv4_lpm",
             match_fields={
@@ -183,10 +234,42 @@ def main():
                 "port": 6
             })
         s1.WriteTableEntry(table_entry)
-        print("Installed IPv4_lpm rule")
+        print("%s rule installed" % table_name)
 
 
-        print("Insert Set_Sink_Direction Entries")
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.7.0", 24)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:03:07:00",
+                "port": 5
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.8.0", 24)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:04:08:00",
+                "port": 6
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Set the sink direction
+        table_name = "set_sink_direction"
+        print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.set_sink_direction",
             match_fields={
@@ -197,11 +280,55 @@ def main():
                 "direction": 1
             })
         s1.WriteTableEntry(table_entry)
-        print("Installed Set_Sink_Direction rule")
+        print("%s rule installed" % table_name)
 
 
-        # Remember to add priority if you use Range
-        print("Insert Set_ECMP_COUNT Entries")
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_sink_direction",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.2.0", 24)
+            },
+            action_name="MyIngress.set_direction",
+            action_params={
+                "direction": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_sink_direction",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.7.0", 24)
+            },
+            action_name="MyIngress.set_direction",
+            action_params={
+                "direction": 3
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_sink_direction",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.8.0", 24)
+            },
+            action_name="MyIngress.set_direction",
+            action_params={
+                "direction": 4
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Set ecmp count rule
+        # Remember to add priority if you use "Range" match
+        table_name = "forward_by_ecmp_count"
+        print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
@@ -214,7 +341,342 @@ def main():
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
-        print("Installed Set_ECMP_COUNT rule")
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 2,
+                "meta.ecmp_count": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 3,
+                "meta.ecmp_count": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 3,
+                "meta.ecmp_count": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 4,
+                "meta.ecmp_count": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 4,
+                "meta.ecmp_count": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Forward by packet counter
+        table_name = "forward_by_packet_counter"
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 2,
+                "meta.packet_counter": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 2,
+                "meta.packet_counter": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Forward by packet counter
+        table_name = "forward_by_packet_counter"
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 3,
+                "meta.packet_counter": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 3,
+                "meta.packet_counter": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 4,
+                "meta.packet_counter": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_packet_counter",
+            match_fields={
+                "hdr.myheader.direction": 4,
+                "meta.packet_counter": (1, 1)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 6
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Set source or sink switch by port
+        # FWD TYPE:
+        #  0: IPv4_LPM, 1: ECMP, 2: PPS(shared counter),
+        #  3: PPS (independent counter)
+        table_name = "set_source_or_sink"
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_source_or_sink",
+            match_fields={
+                "standard_metadata.ingress_port": (1, 4)
+            },
+            action_name="MyIngress.set_source",
+            action_params={
+                "fwd_type": 1,
+                "priority": 0
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_source_or_sink",
+            match_fields={
+                "standard_metadata.ingress_port": (5, 6)
+            },
+            action_name="MyIngress.set_sink",
+            action_params={
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Set maximum number of counter
+        table_name = "set_counter_max"
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_counter_max",
+            match_fields={
+                "hdr.myheader.direction": 1
+            },
+            action_name="MyIngress.set_counter_max_value",
+            action_params={
+                "max": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_counter_max",
+            match_fields={
+                "hdr.myheader.direction": 2
+            },
+            action_name="MyIngress.set_counter_max_value",
+            action_params={
+                "max": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_counter_max",
+            match_fields={
+                "hdr.myheader.direction": 3
+            },
+            action_name="MyIngress.set_counter_max_value",
+            action_params={
+                "max": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_counter_max",
+            match_fields={
+                "hdr.myheader.direction": 4
+            },
+            action_name="MyIngress.set_counter_max_value",
+            action_params={
+                "max": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        # Get an ECMP hash number
+        table_name = "ecmp_select_next_port"
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ecmp_select_next_port",
+            match_fields={
+                "hdr.myheader.direction": 1
+            },
+            action_name="MyIngress.ecmp_set_next_port",
+            action_params={
+                "ecmp_base": 0,
+                "ecmp_count": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ecmp_select_next_port",
+            match_fields={
+                "hdr.myheader.direction": 2
+            },
+            action_name="MyIngress.ecmp_set_next_port",
+            action_params={
+                "ecmp_base": 0,
+                "ecmp_count": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ecmp_select_next_port",
+            match_fields={
+                "hdr.myheader.direction": 3
+            },
+            action_name="MyIngress.ecmp_set_next_port",
+            action_params={
+                "ecmp_base": 0,
+                "ecmp_count": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
+
+
+        print("Insert %s Flow Entries" % table_name)
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ecmp_select_next_port",
+            match_fields={
+                "hdr.myheader.direction": 4
+            },
+            action_name="MyIngress.ecmp_set_next_port",
+            action_params={
+                "ecmp_base": 0,
+                "ecmp_count": 2
+            })
+        s1.WriteTableEntry(table_entry)
+        print("%s rule installed" % table_name)
 
 
         readTableRules(s1)
