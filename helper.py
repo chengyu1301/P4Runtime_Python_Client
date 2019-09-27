@@ -18,6 +18,8 @@ import google.protobuf.text_format
 from p4.v1 import p4runtime_pb2
 from p4.config.v1 import p4info_pb2
 
+from convert import encode
+
 class P4InfoHelper(object):
     def __init__(self, p4_info_filepath):
         p4info = p4info_pb2.P4Info()
@@ -179,3 +181,35 @@ class P4InfoHelper(object):
         p4runtime_param.param_id = p4info_param.id
         p4runtime_param.value = encode(value, p4info_param.bitwidth)
         return p4runtime_param
+
+    def buildTableEntry(self,
+                        table_name,
+                        match_fields=None,
+                        default_action=False,
+                        action_name=None,
+                        action_params=None,
+                        priority=None):
+        table_entry = p4runtime_pb2.TableEntry()
+        table_entry.table_id = self.get_tables_id(table_name)
+
+        if priority is not None:
+            table_entry.priority = priority
+
+        if match_fields:
+            table_entry.match.extend([
+                self.get_match_field_pb(table_name, match_field_name, value)
+                for match_field_name, value in match_fields.iteritems()
+            ])
+
+        if default_action:
+            table_entry.is_default_action = True
+
+        if action_name:
+            action = table_entry.action.action
+            action.action_id = self.get_actions_id(action_name)
+            if action_params:
+                action.params.extend([
+                    self.get_action_param_pb(action_name, field_name, value)
+                    for field_name, value in action_params.iteritems()
+                ])
+        return table_entry

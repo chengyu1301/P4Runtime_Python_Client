@@ -39,6 +39,8 @@ from p4.v1 import p4runtime_pb2
 
 from basic import P4RuntimeClient
 
+from convert import encode
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("pi_client")
 
@@ -151,99 +153,86 @@ def main():
             s1.add_roleconfig_entry(roleconfig, "ingress.table1_control.table1", 1)
             s1.handshake(roleconfig)
 
-        # Set Permission ACL
-        print "Insert Ingress Permission ACL entry - Ingress Port == 1 role_id == 1"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "ingress.permission_acl_ingress.permission_acl_ingress_table",
-            [s1.Exact("standard_metadata.ingress_port", '\x00\x01')],
-            "permission_acl_ingress.set_user_pipeline_id_and_role_id", [("p_id", b'\x01'), ("r_id", b'\x01')], 100)
-        s1.write_request(req)
-
-        print "Insert Ingress Permission ACL entry - Ingress Port == 2 role_id == 1"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "ingress.permission_acl_ingress.permission_acl_ingress_table",
-            [s1.Exact("standard_metadata.ingress_port", '\x00\x02')],
-            "permission_acl_ingress.set_user_pipeline_id_and_role_id", [("p_id", b'\x01'), ("r_id", b'\x01')], 100)
-        s1.write_request(req)
-
-        print "Insert Egress Permission ACL entry - Permit role 1 to Egress Port == 1"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "egress.permission_acl_egress.permission_acl_egress_table",
-            [s1.Ternary("local_metadata.role_id", '\x01', '\x7f'),
-             s1.Ternary("standard_metadata.egress_port", '\x00\x01', '\x01\xff')],
-            "NoAction", [], 100)
-        s1.write_request(req)
-
-        print "Insert Egress Permission ACL entry - Permit role 1 to Egress Port == 2"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "egress.permission_acl_egress.permission_acl_egress_table",
-            [s1.Ternary("local_metadata.role_id", '\x01', '\x7f'),
-             s1.Ternary("standard_metadata.egress_port", '\x00\x02', '\x01\xff')],
-            "NoAction", [], 100)
-        s1.write_request(req)
-
-        print "Insert Egress Permission ACL entry - Drop the other pkts to Egress Port == 1"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "egress.permission_acl_egress.permission_acl_egress_table",
-            [s1.Ternary("standard_metadata.egress_port", '\x00\x01', '\x01\xff')],
-            "_drop", [], 90)
-        s1.write_request(req)
-
-        print "Insert Egress Permission ACL entry - Drop the other pkts to Egress Port == 2"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "egress.permission_acl_egress.permission_acl_egress_table",
-            [s1.Ternary("standard_metadata.egress_port", '\x00\x02', '\x01\xff')],
-            "_drop", [], 90)
-        s1.write_request(req)
-
         # Set Table1 Flow entry
 
-        print "Insert Table1 Flow Entry: Port1 => Port2"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "ingress.table1_control.table1",
-            [s1.Ternary("standard_metadata.ingress_port", '\x00\x01', '\x01\xff'),
-             s1.Ternary("local_metadata.role_id", '\x01', '\x7f') ],
-            "table1_control.set_egress_port", [("port", b'\x00\x02')], 100)
-        s1.write_request(req)
+        # IPv4_lpm
+        print("Insert IPv4_lpm Flow Entries")
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.1.1", 32)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:00:01:01",
+                "port": 1
+            })
+        s1.WriteTableEntry(table_entry)
+        print("Installed IPv4_lpm rule")
 
-        print "Insert Table1 Flow Entry: Port2 => Port1"
-        req = s1.get_new_write_request()
-        s1.push_update_add_entry_to_action(
-            req,
-            "ingress.table1_control.table1",
-            [s1.Ternary("standard_metadata.ingress_port", '\x00\x02', '\x01\xff'),
-             s1.Ternary("local_metadata.role_id", '\x01', '\x7f') ],
-            "table1_control.set_egress_port", [("port", b'\x00\x01')], 100)
-        s1.write_request(req)
+
+        print("Insert IPv4_lpm Flow Entries")
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.ipv4_lpm",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.2.0", 24)
+            },
+            action_name="MyIngress.ipv4_forward",
+            action_params={
+                "dstAddr": "00:00:00:04:02:00",
+                "port": 6
+            })
+        s1.WriteTableEntry(table_entry)
+        print("Installed IPv4_lpm rule")
+
+
+        print("Insert Set_Sink_Direction Entries")
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_sink_direction",
+            match_fields={
+                "hdr.ipv4.dstAddr": ("10.0.1.0", 24)
+            },
+            action_name="MyIngress.set_direction",
+            action_params={
+                "direction": 1
+            })
+        s1.WriteTableEntry(table_entry)
+        print("Installed Set_Sink_Direction rule")
+
+
+        # Remember to add priority if you use Range
+        print("Insert Set_ECMP_COUNT Entries")
+        table_entry = s1.p4info_helper.buildTableEntry(
+            table_name="MyIngress.forward_by_ecmp_count",
+            match_fields={
+                "hdr.myheader.direction": 2,
+                "meta.ecmp_count": (0, 0)
+            },
+            action_name="MyIngress.send_to_port",
+            action_params={
+                "port": 5
+            },
+            priority=1)
+        s1.WriteTableEntry(table_entry)
+        print("Installed Set_ECMP_COUNT rule")
+
 
         readTableRules(s1)
 
         while 1:
-            s1.packetin_rdy.wait()
-            packetin = s1.get_packet_in()
-            if packetin:
+            time.sleep(5)
+
+            #s1.packetin_rdy.wait()
+            #packetin = s1.get_packet_in()
+            #if packetin:
                 # Print Packet from CPU_PORT of Switch
-                print " ".join("{:02x}".format(ord(c)) for c in packetin.payload)
+                #print " ".join("{:02x}".format(ord(c)) for c in packetin.payload)
 
                 # Print metadatas:
                 #     1. packet_in switch port (9 bits)
                 #     2. padding (7 bits)
-                for metadata_ in packetin.metadata:
-                    print " ".join("{:02x}".format(ord(c)) for c in metadata_.value)
+                #for metadata_ in packetin.metadata:
+                    #print " ".join("{:02x}".format(ord(c)) for c in metadata_.value)
 
     except Exception:
         raise

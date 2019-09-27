@@ -513,10 +513,32 @@ class P4RuntimeClient():
                 raise e
         raise P4RuntimeWriteException(e)
 
+    def WriteTableEntry(self, table_entry, dry_run=False):
+        request = p4runtime_pb2.WriteRequest()
+        request.device_id = self.device_id
+        request.role_id = self.role_id
+        update = request.updates.add()
+        if table_entry.is_default_action:
+            update.type = p4runtime_pb2.Update.MODIFY
+        else:
+            update.type = p4runtime_pb2.Update.INSERT
+        update.entity.table_entry.CopyFrom(table_entry)
+
+        '''
+        if dry_run:
+            print "P4Runtime Write:", request
+        else:
+            for response in self.stub.Write(request):
+                yield response
+        '''
+        self.write_request(request)
+
+
     def ReadTableEntries(self, table_id=None, dry_run=False):
         request = p4runtime_pb2.ReadRequest()
         request.device_id = self.device_id
-        request.role_id = self.role_id
+        # AttributeError: Assignment not allowed (no field "role_id" in protocol message object).
+        #request.role_id = self.role_id
         entity = request.entities.add()
         table_entry = entity.table_entry
         if table_id is not None:
