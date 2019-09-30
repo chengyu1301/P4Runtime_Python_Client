@@ -513,12 +513,14 @@ class P4RuntimeClient():
                 raise e
         raise P4RuntimeWriteException(e)
 
-    def WriteTableEntry(self, table_entry, dry_run=False):
+    def WriteTableEntry(self, table_entry, dry_run=False, modify_entry=False):
         request = p4runtime_pb2.WriteRequest()
         request.device_id = self.device_id
         request.role_id = self.role_id
         update = request.updates.add()
-        if table_entry.is_default_action:
+        if modify_entry == True:
+            update.type = p4runtime_pb2.Update.MODIFY
+        elif table_entry.is_default_action:
             update.type = p4runtime_pb2.Update.MODIFY
         else:
             update.type = p4runtime_pb2.Update.INSERT

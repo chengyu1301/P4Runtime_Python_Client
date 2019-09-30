@@ -91,6 +91,51 @@ def warn(msg, *args, **kwargs):
 def info(msg, *args, **kwargs):
     logger.info(msg, *args, **kwargs)
 
+def choose_fwd_type(switch_instance):
+    print("======================================")
+    print("FWD_TYPE: ")
+    print("(0) IPv4 LPM (1) Per-packet ECMP")
+    print("(2) PPS(Shared counter), (3) PPS(Independent counter)")
+    print("Enter 999 to read table entries")
+    input_number = raw_input("Enter a number to choose FWD_TYPE: ")
+    try:
+        input_number = int(input_number)
+        if (input_number == 0):
+            print("Changing FWD_TYPE to IPv4 LPM")
+            _act_param = {"fwd_type": 0, "priority": 0}
+        elif (input_number == 1):
+            print("Changing FWD_TYPE to Per-packet ECMP")
+            _act_param = {"fwd_type": 1, "priority": 0}
+        elif (input_number == 2):
+            print("Changing FWD_TYPE to PPS(shared counter)")
+            _act_param = {"fwd_type": 2, "priority": 0}
+        elif (input_number == 3):
+            print("Changing FWD_TYPE to PPS(Independent counter)")
+            _act_param = {"fwd_type": 3, "priority": 0}
+        elif (input_number == 999):
+            readTableRules(switch_instance)
+            return
+        else:
+            print("Please enter a correct number!")
+            return
+
+        table_name = "set_source_or_sink"
+        print("Modify %s Flow Entries" % table_name)
+        table_entry = switch_instance.p4info_helper.buildTableEntry(
+            table_name="MyIngress.set_source_or_sink",
+            match_fields={
+                "standard_metadata.ingress_port": (1, 4)
+            },
+            action_name="MyIngress.set_source",
+            action_params= _act_param,
+            priority=1)
+        switch_instance.WriteTableEntry(table_entry, modify_entry=True)
+        print("%s rule installed" % table_name)
+        
+    except ValueError:
+        print("Please enter a number!")
+    
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -681,8 +726,9 @@ def main():
 
         readTableRules(s1)
 
+
         while 1:
-            time.sleep(5)
+            choose_fwd_type(s1)
 
             #s1.packetin_rdy.wait()
             #packetin = s1.get_packet_in()
