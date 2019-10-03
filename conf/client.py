@@ -107,7 +107,7 @@ def choose_fwd_type(switch_instance):
             print("Changing FWD_TYPE to Per-packet ECMP")
             _act_param = {"fwd_type": 1, "priority": 0}
         elif (input_number == 2):
-            print("Changing FWD_TYPE to PPS(Shared counter)")
+            print("Changing FWD_TYPE to PPS(shared counter)")
             _act_param = {"fwd_type": 2, "priority": 0}
         elif (input_number == 3):
             print("Changing FWD_TYPE to PPS(Independent counter)")
@@ -216,7 +216,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:00:01:01",
-                "port": 1
+                "port": 133
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -231,7 +231,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:00:01:02",
-                "port": 2
+                "port": 132
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -246,7 +246,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:00:01:03",
-                "port": 3
+                "port": 135
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -260,8 +260,8 @@ def main():
             },
             action_name="MyIngress.ipv4_forward",
             action_params={
-                "dstAddr": "00:00:00:00:01:01",
-                "port": 4
+                "dstAddr": "00:00:00:00:01:04",
+                "port": 134
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -276,7 +276,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:04:02:00",
-                "port": 6
+                "port": 140
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -291,7 +291,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:03:07:00",
-                "port": 5
+                "port": 141
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -306,7 +306,7 @@ def main():
             action_name="MyIngress.ipv4_forward",
             action_params={
                 "dstAddr": "00:00:00:04:08:00",
-                "port": 6
+                "port": 140
             })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
@@ -382,7 +382,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -398,7 +398,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -414,7 +414,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -430,7 +430,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -446,7 +446,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -462,7 +462,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -480,7 +480,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -496,7 +496,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -514,7 +514,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -530,7 +530,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -546,7 +546,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 5
+                "port": 141
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -562,7 +562,7 @@ def main():
             },
             action_name="MyIngress.send_to_port",
             action_params={
-                "port": 6
+                "port": 140
             },
             priority=1)
         s1.WriteTableEntry(table_entry)
@@ -578,7 +578,7 @@ def main():
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.set_source_or_sink",
             match_fields={
-                "standard_metadata.ingress_port": (1, 4)
+                "standard_metadata.ingress_port": (132, 135)
             },
             action_name="MyIngress.set_source",
             action_params={
@@ -594,7 +594,7 @@ def main():
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.set_source_or_sink",
             match_fields={
-                "standard_metadata.ingress_port": (5, 6)
+                "standard_metadata.ingress_port": (140, 141)
             },
             action_name="MyIngress.set_sink",
             action_params={
