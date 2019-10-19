@@ -124,7 +124,7 @@ def choose_fwd_type(switch_instance):
         table_entry = switch_instance.p4info_helper.buildTableEntry(
             table_name="MyIngress.set_source_or_sink",
             match_fields={
-                "standard_metadata.ingress_port": (1, 4)
+                "standard_metadata.ingress_port": (132, 135)
             },
             action_name="MyIngress.set_source",
             action_params= _act_param,
