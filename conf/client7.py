@@ -215,7 +215,7 @@ def main():
             },
             action_name="MyIngress.ipv4_forward",
             action_params={
-                "dstAddr": "00:00:00:00:07:09",
+                "dstAddr": "3c:fd:fe:ba:fa:d0",
                 "port": 133
             })
         s1.WriteTableEntry(table_entry)
@@ -230,7 +230,7 @@ def main():
             },
             action_name="MyIngress.ipv4_forward",
             action_params={
-                "dstAddr": "00:00:00:00:07:0a",
+                "dstAddr": "3c:fd:fe:ba:fa:d1",
                 "port": 132
             })
         s1.WriteTableEntry(table_entry)
@@ -256,7 +256,7 @@ def main():
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.ipv4_lpm",
             match_fields={
-                "hdr.ipv4.dstAddr": (10.0.7.12)
+                "hdr.ipv4.dstAddr": ("10.0.7.12", 32)
             },
             action_name="MyIngress.ipv4_forward",
             action_params={

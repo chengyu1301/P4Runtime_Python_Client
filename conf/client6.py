@@ -206,6 +206,7 @@ def main():
 
 
         # IPv4_lpm
+        table_name = "ipv4_lpm"
         print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
             table_name="MyIngress.ipv4_lpm",
