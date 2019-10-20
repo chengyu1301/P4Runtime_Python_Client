@@ -119,10 +119,10 @@ def choose_fwd_type(switch_instance):
             print("Please enter a correct number!")
             return
 
-        table_name = "set_source_or_sink"
+        table_name = "set_source_table"
         print("Modify %s Flow Entries" % table_name)
         table_entry = switch_instance.p4info_helper.buildTableEntry(
-            table_name="MyIngress.set_source_or_sink",
+            table_name="MyIngress.set_source_table",
             match_fields={
                 "standard_metadata.ingress_port": (132, 135)
             },
@@ -573,16 +573,16 @@ def main():
         # FWD TYPE:
         #  0: IPv4_LPM, 1: ECMP, 2: PPS(shared counter),
         #  3: PPS (independent counter)
-        table_name = "set_source_or_sink"
+        table_name = "set_source_table"
         print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
-            table_name="MyIngress.set_source_or_sink",
+            table_name="MyIngress.set_source_table",
             match_fields={
                 "standard_metadata.ingress_port": (132, 135)
             },
             action_name="MyIngress.set_source",
             action_params={
-                "fwd_type": 1,
+                "fwd_type": 0,
                 "priority": 0
             },
             priority=1)
@@ -590,11 +590,12 @@ def main():
         print("%s rule installed" % table_name)
 
 
+        table_name = "set_sink_table"
         print("Insert %s Flow Entries" % table_name)
         table_entry = s1.p4info_helper.buildTableEntry(
-            table_name="MyIngress.set_source_or_sink",
+            table_name="MyIngress.set_sink_table",
             match_fields={
-                "standard_metadata.ingress_port": (140, 141)
+                "hdr.myheader.direction": (3, 3)
             },
             action_name="MyIngress.set_sink",
             action_params={
