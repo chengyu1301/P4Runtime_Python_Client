@@ -260,13 +260,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 1,
-                "meta.ecmp_count": (0, 0)
+                "meta.ecmp_count": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 141
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -276,13 +275,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 1,
-                "meta.ecmp_count": (1, 1)
+                "meta.ecmp_count": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 141
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -292,13 +290,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 2,
-                "meta.ecmp_count": (0, 0)
+                "meta.ecmp_count": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 140
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -308,13 +305,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 2,
-                "meta.ecmp_count": (1, 1)
+                "meta.ecmp_count": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 140
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -324,13 +320,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 3,
-                "meta.ecmp_count": (0, 0)
+                "meta.ecmp_count": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 143
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -340,13 +335,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 3,
-                "meta.ecmp_count": (1, 1)
+                "meta.ecmp_count": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 142
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -356,13 +350,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 4,
-                "meta.ecmp_count": (0, 0)
+                "meta.ecmp_count": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 143
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -372,13 +365,12 @@ def main():
             table_name="MyIngress.forward_by_ecmp_count",
             match_fields={
                 "hdr.myheader.direction": 4,
-                "meta.ecmp_count": (1, 1)
+                "meta.ecmp_count": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 142
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -390,13 +382,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 1,
-                "meta.packet_counter": (0, 0)
+                "meta.packet_counter": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 141
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -406,13 +397,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 1,
-                "meta.packet_counter": (1, 1)
+                "meta.packet_counter": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 141
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -423,13 +413,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 2,
-                "meta.packet_counter": (0, 0)
+                "meta.packet_counter": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 140
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -439,13 +428,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 2,
-                "meta.packet_counter": (1, 1)
+                "meta.packet_counter": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 140
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -457,13 +445,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 3,
-                "meta.packet_counter": (0, 0)
+                "meta.packet_counter": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 143
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -473,13 +460,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 3,
-                "meta.packet_counter": (1, 1)
+                "meta.packet_counter": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 142
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -489,13 +475,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 4,
-                "meta.packet_counter": (0, 0)
+                "meta.packet_counter": 0
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 143
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
@@ -505,13 +490,12 @@ def main():
             table_name="MyIngress.forward_by_packet_counter",
             match_fields={
                 "hdr.myheader.direction": 4,
-                "meta.packet_counter": (1, 1)
+                "meta.packet_counter": 1
             },
             action_name="MyIngress.send_to_port",
             action_params={
                 "port": 142
-            },
-            priority=1)
+            })
         s1.WriteTableEntry(table_entry)
         print("%s rule installed" % table_name)
 
